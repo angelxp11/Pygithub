@@ -1,0 +1,1 @@
+genera una cuenta de cobro en formato word y pdf gracias al formato txt que se opuede usar en moviles y pc

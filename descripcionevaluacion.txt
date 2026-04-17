@@ -1,0 +1,54 @@
+<div style="max-width: 700px; margin: auto; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden;">
+
+  <!-- Encabezado -->
+  <div style="background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 20px; text-align: center;">
+    <h2 style="margin: 0;">📘 Instrucciones del Examen</h2>
+    <p style="margin: 5px 0 0;">Lee cuidadosamente antes de comenzar</p>
+  </div>
+
+  <!-- Contenido -->
+  <div style="padding: 20px; color: #333;">
+
+    <div style="margin-bottom: 15px;">
+      <strong>🕒 Tómate tu tiempo</strong>
+      <p style="margin: 5px 0;">Analiza cada pregunta con calma antes de responder.</p>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <strong>🎯 Un solo intento</strong>
+      <p style="margin: 5px 0;">Solo tendrás una oportunidad. Asegúrate de estar preparado.</p>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <strong>📊 Nota mínima</strong>
+      <p style="margin: 5px 0;">Debes obtener más de <strong>35.00</strong> para aprobar.</p>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <strong>🚫 Trabajo individual</strong>
+      <p style="margin: 5px 0;">No se permite ayuda de otras personas.</p>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <strong>🤖 Uso de IA prohibido</strong>
+      <p style="margin: 5px 0;">No está permitido el uso de inteligencia artificial ni herramientas externas.</p>
+    </div>
+
+    <!-- Advertencias en una sola tarjeta -->
+    <div style="background: #ffe6e6; border-left: 6px solid #e74c3c; padding: 15px; border-radius: 8px; margin-top: 20px;">
+      <strong style="color: #c0392b;">⚠️ ADVERTENCIAS IMPORTANTES</strong>
+      <ul style="margin-top: 10px; padding-left: 20px;">
+        <li>El incumplimiento de estas normas puede anular tu evaluación.</li>
+        <li>Si cambias repetidamente de pestaña o sales del examen, el sistema lo detectará y finalizará tu intento automáticamente.</li>
+      </ul>
+    </div>
+
+    <!-- Mensaje final -->
+    <div style="text-align: center; margin-top: 25px;">
+      <p style="font-weight: bold; color: #27ae60; font-size: 16px;">
+        ¡Mucho éxito! Confía en tus conocimientos 💪
+      </p>
+    </div>
+
+  </div>
+</div>
