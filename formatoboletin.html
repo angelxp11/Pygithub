@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Boletín Académico</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f3f5f7;
+    padding:15px;
+    color:#222;
+}
+
+.container{
+    max-width:950px;
+    margin:auto;
+}
+
+.actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+button{
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.2s;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+.btn-add{
+    background:#28a745;
+    color:#fff;
+}
+
+.btn-pdf{
+    background:#0d6efd;
+    color:#fff;
+}
+
+/* ================= BOLETIN ================= */
+
+.boletin{
+    background:#fff;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid #dcdcdc;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+/* ================= HEADER ================= */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 22px;
+    border-bottom:2px solid #e9ecef;
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.logo-horizontal{
+    width:180px;
+    height:auto;
+    object-fit:contain;
+}
+
+.school-info h1{
+    font-size:20px;
+    color:#0d3b66;
+    margin-bottom:4px;
+}
+
+.school-info p{
+    font-size:12px;
+    color:#555;
+    margin-bottom:2px;
+}
+
+.fecha-box{
+    background:#eef4ff;
+    color:#0d3b66;
+    padding:10px 14px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+/* ================= SECCIONES ================= */
+
+.section{
+    padding:14px 22px;
+    border-bottom:1px solid #ececec;
+}
+
+.section-title{
+    font-size:14px;
+    font-weight:bold;
+    color:#0d3b66;
+    margin-bottom:12px;
+    text-transform:uppercase;
+}
+
+/* ================= GRID ================= */
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.info-item{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.label{
+    font-size:12px;
+    color:#555;
+    font-weight:bold;
+}
+
+input,
+textarea{
+    width:100%;
+    border:1px solid #ced4da;
+    border-radius:6px;
+    padding:7px 10px;
+    font-size:13px;
+    background:#fff;
+}
+
+textarea{
+    resize:none;
+    min-height:65px;
+}
+
+/* ================= TABLA ================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#f8f9fa;
+    color:#0d3b66;
+    text-align:left;
+    padding:9px;
+    font-size:12px;
+    border-bottom:1px solid #dee2e6;
+}
+
+td{
+    padding:9px;
+    border-bottom:1px solid #ececec;
+    font-size:12px;
+}
+
+.nota-input{
+    width:65px;
+    text-align:center;
+}
+
+.promedio{
+    font-weight:bold;
+    color:#198754;
+}
+
+.btn-delete{
+    background:#dc3545;
+    color:#fff;
+    padding:6px 10px;
+    font-size:11px;
+}
+
+/* ================= RESUMEN ================= */
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.summary-card{
+    border:1px solid #dee2e6;
+    border-radius:8px;
+    background:#f8f9fa;
+    padding:14px;
+    text-align:center;
+}
+
+.summary-card h3{
+    font-size:12px;
+    color:#555;
+    margin-bottom:5px;
+}
+
+.summary-card p{
+    font-size:26px;
+    font-weight:bold;
+    color:#0d3b66;
+}
+
+/* ================= FIRMAS ================= */
+
+.signatures{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:40px;
+    margin-top:22px;
+}
+
+.signature{
+    text-align:center;
+}
+
+.line{
+    border-top:1px solid #444;
+    margin-bottom:7px;
+}
+
+.signature p{
+    font-size:12px;
+    color:#444;
+}
+
+/* ================= PDF ================= */
+
+@media print{
+
+    body{
+        background:#fff;
+        padding:0;
+    }
+
+    .actions{
+        display:none;
+    }
+
+    .boletin{
+        box-shadow:none;
+        border:none;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .info-grid,
+    .summary,
+    .signatures{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- BOTONES -->
+
+    <div class="actions">
+
+        <button
+            class="btn-add"
+            onclick="agregarMateria()"
+        >
+            + Agregar Materia
+        </button>
+
+        <button
+            class="btn-pdf"
+            onclick="generarPDF()"
+        >
+            Generar PDF
+        </button>
+
+    </div>
+
+    <!-- BOLETIN -->
+
+    <div class="boletin" id="boletin">
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <div class="header-left">
+
+                <img
+                    src="C:/CODIGOS/ensenarte/src/resources/images/ensenartecorto.png"
+                    class="logo-horizontal"
+                >
+
+                <div class="school-info">
+
+                    <h1>
+                        Asociación Mundial Enseñarte - Holdme
+                    </h1>
+
+                    <p>
+                        NIT: 901922413-3
+                    </p>
+
+                    <p>
+                        Funza, Cundinamarca
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="fecha-box">
+                Fecha:
+                <span id="fechaActual"></span>
+            </div>
+
+        </div>
+
+        <!-- INFORMACIÓN -->
+
+        <div class="section">
+
+            <div class="section-title">
+                Información del Estudiante
+            </div>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <label class="label">
+                        Nombres y Apellidos
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nombreEstudiante"
+                    >
+                </div>
+
+                <div class="info-item">
+                    <label class="label">
+                        Documento
+                    </label>
+
+                    <input type="text">
+                </div>
+
+                <div class="info-item">
+                    <label class="label">
+                        Programa
+                    </label>
+
+                    <input type="text">
+                </div>
+
+                <div class="info-item">
+                    <label class="label">
+                        Director(a) de Grupo
+                    </label>
+
+                    <input type="text">
+                </div>
+
+                <div class="info-item">
+                    <label class="label">
+                        Año Lectivo
+                    </label>
+
+                    <input
+                        type="number"
+                        value="2025"
+                    >
+                </div>
+
+                <div class="info-item">
+                    <label class="label">
+                        Número de Período
+                    </label>
+
+                    <input
+                        type="text"
+                        value="Período 1"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABLA -->
+
+        <div class="section">
+
+            <div class="section-title">
+                Rendimiento Académico
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Asignatura</th>
+                        <th>Nota</th>
+                        <th>Definitiva</th>
+                        <th>Acción</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="tablaMaterias">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- RESUMEN -->
+
+        <div class="section">
+
+            <div class="section-title">
+                Resumen del Período
+            </div>
+
+            <div class="summary">
+
+                <div class="summary-card">
+
+                    <h3>
+                        Promedio General
+                    </h3>
+
+                    <p id="promedioGeneral">
+                        0.0
+                    </p>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <h3>
+                        Materias Reprobadas
+                    </h3>
+
+                    <p id="materiasReprobadas">
+                        0
+                    </p>
+
+                </div>
+
+                <!-- FUTURO -->
+                <!--
+                <div class="summary-card">
+
+                    <h3>
+                        Puesto del Grado
+                    </h3>
+
+                    <p>
+                        0 / 0
+                    </p>
+
+                </div>
+                -->
+
+            </div>
+
+        </div>
+
+        <!-- OBSERVACIONES -->
+
+        <div class="section">
+
+            <div class="section-title">
+                Observaciones
+            </div>
+
+            <textarea
+                placeholder="Escriba las observaciones del estudiante..."
+            ></textarea>
+
+            <!-- FIRMAS -->
+
+            <div class="signatures">
+
+                <div class="signature">
+
+                    <div class="line"></div>
+
+                    <p>
+                        Director(a) de Grupo
+                    </p>
+
+                </div>
+
+                <div class="signature">
+
+                    <div class="line"></div>
+
+                    <p>
+                        Coordinador Académico
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* ================= FECHA ================= */
+
+document.getElementById("fechaActual").innerText =
+new Date().toLocaleDateString("es-CO");
+
+/* ================= TABLA ================= */
+
+const tabla =
+document.getElementById("tablaMaterias");
+
+/* ================= AGREGAR MATERIA ================= */
+
+function agregarMateria(){
+
+    const fila =
+    document.createElement("tr");
+
+    fila.innerHTML = `
+
+        <td>
+            <input
+                type="text"
+                placeholder="Asignatura"
+            >
+        </td>
+
+        <td>
+            <input
+                type="number"
+                min="0"
+                max="5"
+                step="0.1"
+                value="0"
+                class="nota-input nota"
+                onchange="calcularFila(this)"
+            >
+        </td>
+
+        <td class="promedio">
+            0.0
+        </td>
+
+        <td>
+
+            <button
+                class="btn-delete"
+                onclick="eliminarFila(this)"
+            >
+                Eliminar
+            </button>
+
+        </td>
+    `;
+
+    tabla.appendChild(fila);
+
+    actualizarResumen();
+}
+
+/* ================= ELIMINAR ================= */
+
+function eliminarFila(btn){
+
+    btn.closest("tr").remove();
+
+    actualizarResumen();
+}
+
+/* ================= CALCULAR ================= */
+
+function calcularFila(input){
+
+    const fila =
+    input.closest("tr");
+
+    const nota =
+    parseFloat(input.value || 0);
+
+    fila.querySelector(".promedio").innerText =
+    nota.toFixed(1);
+
+    actualizarResumen();
+}
+
+/* ================= RESUMEN ================= */
+
+function actualizarResumen(){
+
+    const filas =
+    tabla.querySelectorAll("tr");
+
+    let total = 0;
+    let cantidad = 0;
+    let reprobadas = 0;
+
+    filas.forEach(fila => {
+
+        const promedio =
+        parseFloat(
+            fila.querySelector(".promedio").innerText
+        ) || 0;
+
+        total += promedio;
+
+        cantidad++;
+
+        if(promedio < 3.5){
+            reprobadas++;
+        }
+
+    });
+
+    const promedioGeneral =
+    cantidad > 0
+    ? total / cantidad
+    : 0;
+
+    document.getElementById("promedioGeneral").innerText =
+    promedioGeneral.toFixed(1);
+
+    document.getElementById("materiasReprobadas").innerText =
+    reprobadas;
+}
+
+/* ================= PDF ================= */
+
+function generarPDF(){
+
+    const nombre =
+    document.getElementById("nombreEstudiante").value
+    || "Estudiante";
+
+    const fecha =
+    new Date()
+    .toLocaleDateString("es-CO")
+    .replace(/\//g,"-");
+
+    const element =
+    document.getElementById("boletin");
+
+    const opciones = {
+
+        margin:0.15,
+
+        filename:
+        `Boletin_${nombre}_${fecha}.pdf`,
+
+        image:{
+            type:'jpeg',
+            quality:1
+        },
+
+        html2canvas:{
+            scale:2
+        },
+
+        jsPDF:{
+            unit:'in',
+            format:'letter',
+            orientation:'portrait'
+        }
+
+    };
+
+    html2pdf()
+    .set(opciones)
+    .from(element)
+    .save();
+}
+
+/* ================= MATERIA INICIAL ================= */
+
+agregarMateria();
+
+</script>
+
+</body>
+</html>
