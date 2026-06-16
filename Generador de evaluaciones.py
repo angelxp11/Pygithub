@@ -7,6 +7,8 @@ from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import subprocess
 import platform
+from datetime import datetime
+
 
 
 # ---------------- UTILIDAD BASE ---------------- #
@@ -24,27 +26,49 @@ def leer_hojas(archivo_excel):
     return wb.sheetnames
 
 
+def valor_celda(celda):
+    valor = celda.value
+
+    if valor is None:
+        return ""
+
+    # Si Excel la interpretó como fecha
+    if isinstance(valor, datetime):
+        formato = celda.number_format.lower()
+
+        # Si el formato contiene barras y no parece fecha real,
+        # probablemente era una fracción tipo 1/2
+        if "/" in formato and "yy" not in formato and "dd" not in formato:
+            return f"{valor.month}/{valor.day}"
+
+        return valor.strftime("%d/%m/%Y")
+
+    return str(valor).strip()
+
+
 def leer_preguntas_desde_excel(archivo_excel, nombre_hoja):
     wb = openpyxl.load_workbook(archivo_excel, data_only=True)
     hoja = wb[nombre_hoja]
 
     preguntas = []
 
-    for fila in hoja.iter_rows(min_row=2, values_only=True):
-        if fila[0] is None:
+    for fila in hoja.iter_rows(min_row=2):
+        if fila[0].value is None:
             continue
 
-        fila = list(fila) + [""]*(6 - len(fila))
-        enunciado, a, b, c, d, correcta = fila[:6]
+        enunciado = valor_celda(fila[0])
+        a = valor_celda(fila[1])
+        b = valor_celda(fila[2])
+        c = valor_celda(fila[3])
+        d = valor_celda(fila[4])
+        correcta = valor_celda(fila[5]).upper()
 
         opciones = {
-            "A": str(a).strip(),
-            "B": str(b).strip(),
-            "C": str(c).strip(),
-            "D": str(d).strip()
+            "A": a,
+            "B": b,
+            "C": c,
+            "D": d
         }
-
-        correcta = str(correcta).strip().upper()
 
         if correcta not in opciones:
             raise ValueError(f"La respuesta correcta '{correcta}' no es válida")
